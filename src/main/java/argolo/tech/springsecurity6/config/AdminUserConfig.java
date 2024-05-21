@@ -8,6 +8,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
+import java.util.Set;
+
 @Configuration
 public class AdminUserConfig implements CommandLineRunner {
 
@@ -36,6 +38,7 @@ public class AdminUserConfig implements CommandLineRunner {
                     var user = new User();
                     user.setUserName("admin");
                     user.setPassword(PasswordEncoder.encode("123"));
+                    user.setRoles(Set.of(role));
                     userRepository.save(user);
                 }
         );
