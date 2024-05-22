@@ -35,9 +35,8 @@ public class UserController {
     @PostMapping("/users")
     public ResponseEntity<Object> newUser(@RequestBody UserDto userDto) {
 
-        var userRole = roleRepository.findByRoleName(Role.Values.BASIC.name());
+        var userRole = roleRepository.findByName(Role.Values.BASIC.name());
         var userExist = userRepository.findByUserName(userDto.username());
-
         if(userExist.isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
         }
