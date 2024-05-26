@@ -12,7 +12,7 @@ public class Tweet {
     @Id
     @GeneratedValue( strategy = GenerationType.SEQUENCE)
     @Column(name = "teewt_id")
-    private Long TweetId;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -23,12 +23,12 @@ public class Tweet {
     @CreationTimestamp
     private Instant creationTimesTamp;
 
-    public Long getTweetId() {
-        return TweetId;
+    public Long getId() {
+        return id;
     }
 
-    public void setTweetId(Long tweetId) {
-        TweetId = tweetId;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public User getUser() {

@@ -4,12 +4,11 @@ import argolo.tech.springsecurity6.controller.dto.TweetDto;
 import argolo.tech.springsecurity6.entities.Tweet;
 import argolo.tech.springsecurity6.repository.TweetRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
 @RestController
@@ -32,6 +31,19 @@ public class TweetController {
         tweet.setContent(tweetdto.content());
         tweetRepository.save(tweet);
 
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/tweet/{id}")
+    public ResponseEntity<Void> deleteTweet(@PathVariable Long id, JwtAuthenticationToken token) {
+        var tweet = tweetRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Tweet not found"));
+
+        if (tweet.getUser().getId().equals(UUID.fromString(token.getName()))){
+            tweetRepository.delete(tweet);
+        }else {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
         return ResponseEntity.ok().build();
     }
 }

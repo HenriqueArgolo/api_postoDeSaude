@@ -5,20 +5,20 @@ import argolo.tech.springsecurity6.controller.dto.UserDto;
 import argolo.tech.springsecurity6.entities.Role;
 import argolo.tech.springsecurity6.entities.User;
 import argolo.tech.springsecurity6.repository.RoleRepository;
+import argolo.tech.springsecurity6.repository.TweetRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 @RestController
 public class UserController {
@@ -26,12 +26,13 @@ public class UserController {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final TweetRepository tweetRepository;
 
-    public UserController(UserRepository userRepository, RoleRepository roleRepository, AdminUserConfig adminUserConfig, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserController(UserRepository userRepository, RoleRepository roleRepository, AdminUserConfig adminUserConfig, BCryptPasswordEncoder bCryptPasswordEncoder, TweetRepository tweetRepository) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
+        this.tweetRepository = tweetRepository;
     }
 
     @Transactional
@@ -59,5 +60,6 @@ public class UserController {
         var users = userRepository.findAll();
         return ResponseEntity.ok(users);
     }
+
 
 }
