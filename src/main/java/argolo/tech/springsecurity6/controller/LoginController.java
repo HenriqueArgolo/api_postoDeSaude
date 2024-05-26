@@ -4,7 +4,6 @@ import argolo.tech.springsecurity6.controller.dto.LoginRequest;
 import argolo.tech.springsecurity6.controller.dto.LoginResponse;
 import argolo.tech.springsecurity6.entities.Role;
 import argolo.tech.springsecurity6.repository.UserRepository;
-import org.springframework.context.support.BeanDefinitionDsl;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -41,29 +40,26 @@ public class LoginController {
         if(user.isEmpty() || !user.get().isLoginCorrect(loginRequest, bCryptPasswordEncoder)){
             throw new BadCredentialsException("user or password invalid");
         }
+
         var now = Instant.now();
         var expiresIn = 300L;
 
-
-        var scope = user.get().getRoles()
+        var scopes = user.get().getRoles()
                 .stream()
                 .map(Role::getName)
                 .collect(Collectors.joining(" "));
 
-
-
         var claims = JwtClaimsSet.builder()
-                .issuer("backend")
+                .issuer("mybackend")
                 .subject(user.get().getId().toString())
                 .issuedAt(now)
                 .expiresAt(now.plusSeconds(expiresIn))
-                .claim("scope", scope)
+                .claim("scope", scopes)
                 .build();
-
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn, scope));
+        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn, scopes));
 
 
 
