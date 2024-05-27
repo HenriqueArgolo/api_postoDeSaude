@@ -8,6 +8,7 @@ import argolo.tech.springsecurity6.repository.RoleRepository;
 import argolo.tech.springsecurity6.repository.TweetRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
 import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -21,18 +22,15 @@ import java.util.UUID;
 
 @RestController
 public class UserController {
+    @Autowired
+    private  UserRepository userRepository;
+    @Autowired
+    private  RoleRepository roleRepository;
+    @Autowired
+    private  BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 
-    public UserController(UserRepository userRepository, RoleRepository roleRepository, AdminUserConfig adminUserConfig, BCryptPasswordEncoder bCryptPasswordEncoder, TweetRepository tweetRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-
-    }
 
     @Transactional
     @PostMapping("/users")
