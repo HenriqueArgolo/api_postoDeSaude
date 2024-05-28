@@ -13,12 +13,19 @@ import java.util.UUID;
 public class User {
 
     @Id
-    @GeneratedValue(strategy =  GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "user_id")
     private UUID id;
+    private String firstName;
+    private String lastName;
+    @Column(unique = true)
+    private String cpf;
+    @Column(unique = true)
+    private String sus;
     @Column(unique = true)
     private String userName;
-
+    @Column(unique = true)
+    private String email;
     private String password;
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -53,6 +60,46 @@ public class User {
         this.password = password;
     }
 
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    public void setCpf(String cpf) {
+        this.cpf = cpf;
+    }
+
+    public String getSus() {
+        return sus;
+    }
+
+    public void setSus(String sus) {
+        this.sus = sus;
+    }
+
     public Set<Role> getRoles() {
         return roles;
     }
@@ -61,9 +108,7 @@ public class User {
         this.roles = roles;
     }
 
-
-
-    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder){
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
         return passwordEncoder.matches(loginRequest.password(), this.password);
     }
 }

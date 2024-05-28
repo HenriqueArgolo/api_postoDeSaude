@@ -1,11 +1,8 @@
 package argolo.tech.springsecurity6.controller;
-
-import argolo.tech.springsecurity6.config.AdminUserConfig;
 import argolo.tech.springsecurity6.controller.dto.UserDto;
 import argolo.tech.springsecurity6.entities.Role;
 import argolo.tech.springsecurity6.entities.User;
 import argolo.tech.springsecurity6.repository.RoleRepository;
-import argolo.tech.springsecurity6.repository.TweetRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,16 +34,19 @@ public class UserController {
     public ResponseEntity<Object> newUser(@RequestBody UserDto userDto) {
 
         var userRole = roleRepository.findByName(Role.Values.BASIC.name());
-        var userExist = userRepository.findByUserName(userDto.username());
+        var userExist = userRepository.findByUserName(userDto.userName());
         if(userExist.isPresent()) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "User already exists");
         }
-
         var user = new User();
-        user.setUserName(userDto.username());
+        user.setFirstName(userDto.firstName());
+        user.setLastName(userDto.lastName());
         user.setPassword(bCryptPasswordEncoder.encode(userDto.password()));
         user.setRoles(Set.of(userRole));
-
+        user.setCpf(userDto.cpf());
+        user.setSus(userDto.sus());
+        user.setUserName(userDto.userName());
+        user.setEmail(userDto.email());
         userRepository.save(user);
         return ResponseEntity.ok().build();
     }

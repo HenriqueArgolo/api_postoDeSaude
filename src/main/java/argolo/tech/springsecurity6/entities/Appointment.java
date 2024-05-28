@@ -7,18 +7,18 @@ import java.time.Instant;
 
 
 @Entity
-@Table(name = "tb_tweets")
-public class Tweet {
+@Table(name = "tb_appointment")
+public class Appointment {
     @Id
-    @GeneratedValue( strategy = GenerationType.SEQUENCE)
-    @Column(name = "teewt_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "appointment_id")
     private Long id;
-
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    private String content;
+    private String type;
+    private String healthCenter;
+    private String appointmentDate;
 
     @CreationTimestamp
     private Instant creationTimesTamp;
@@ -39,16 +39,32 @@ public class Tweet {
         this.user = user;
     }
 
-    public String getContent() {
-        return content;
+    public String getType() {
+        return type;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setType(String content) {
+        this.type = content;
     }
 
     public Instant getCreationTimesTamp() {
         return creationTimesTamp;
+    }
+
+    public String getHealthCenter() {
+        return healthCenter;
+    }
+
+    public void setHealthCenter(String healthCenter) {
+        this.healthCenter = healthCenter;
+    }
+
+    public String getAppointmentDate() {
+        return appointmentDate;
+    }
+
+    public void setAppointmentDate(String appointmentDate) {
+        this.appointmentDate = appointmentDate;
     }
 
     public void setCreationTimesTamp(Instant creationTimesTamp) {

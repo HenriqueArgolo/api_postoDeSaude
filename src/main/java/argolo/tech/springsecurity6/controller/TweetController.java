@@ -4,7 +4,7 @@ import argolo.tech.springsecurity6.controller.dto.FeedDto;
 import argolo.tech.springsecurity6.controller.dto.FeedTweetDto;
 import argolo.tech.springsecurity6.controller.dto.TweetDto;
 import argolo.tech.springsecurity6.entities.Role;
-import argolo.tech.springsecurity6.entities.Tweet;
+import argolo.tech.springsecurity6.entities.Appointment;
 import argolo.tech.springsecurity6.repository.TweetRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
 import org.springframework.data.domain.PageRequest;
@@ -33,7 +33,7 @@ public class TweetController {
     public ResponseEntity<FeedDto> feed(@RequestParam(value = "page", defaultValue = "0" ) int page,
                                         @RequestParam(value = "pageSize", defaultValue = "10") int pageSize){
         var tweets = tweetRepository.findAll(PageRequest.of(page, pageSize, Sort.Direction.DESC, "creationTimesTamp" ))
-                .map(tweet -> new FeedTweetDto(tweet.getId(), tweet.getContent(), tweet.getUser().getUserName(), tweet.getCreationTimesTamp()));
+                .map(tweet -> new FeedTweetDto(tweet.getId(), tweet.getType(), tweet.getUser().getUserName(), tweet.getCreationTimesTamp()));
 
         return ResponseEntity.ok(new FeedDto(tweets.getContent(), page, pageSize, tweets.getTotalPages(), tweets.getNumberOfElements()));
     }
@@ -41,10 +41,10 @@ public class TweetController {
     @PostMapping("/tweets")
     public ResponseEntity<Void> addTweet(@RequestBody TweetDto tweetdto, JwtAuthenticationToken userToken) {
         var user = userRepository.findById(UUID.fromString(userToken.getName()));
-        var tweet = new Tweet();
+        var tweet = new Appointment();
 
         user.ifPresent(tweet::setUser);
-        tweet.setContent(tweetdto.content());
+        tweet.setType(tweetdto.content());
         tweetRepository.save(tweet);
 
         return ResponseEntity.ok().build();

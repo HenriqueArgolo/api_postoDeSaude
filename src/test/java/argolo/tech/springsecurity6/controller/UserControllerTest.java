@@ -44,10 +44,10 @@ class UserControllerTest {
 
     @Test
     @DisplayName("Test newUser when user already exists")
-    void newUser() {
+    void newUser_UserAlreadyExists_ShouldThrowException() {
         // Given
-        UserDto userDto = new UserDto("existingUser", "password");
-        when(userRepository.findByUserName(userDto.username())).thenReturn(Optional.of(new User()));
+        UserDto userDto = new UserDto("John", "Doe", "12345678900", "98765432100", "johndoe", "john.doe@example.com", "password123");
+        when(userRepository.findByUserName(userDto.userName())).thenReturn(Optional.of(new User()));
 
         // When & Then
         ResponseStatusException exception = assertThrows(ResponseStatusException.class, () -> {
@@ -59,14 +59,12 @@ class UserControllerTest {
     }
 
     @Test
-    @DisplayName("Test newUser with valid user")
-    void newUser_ValidUser() {
+    @DisplayName("Test newUser when user does not exist")
+    void newUser_UserDoesNotExist_ShouldCreateUser() {
         // Given
-        UserDto userDto = new UserDto("newUser", "password");
+        UserDto userDto = new UserDto("Jane", "Doe", "22345678900", "88765432100", "janedoe", "jane.doe@example.com", "password123");
+        when(userRepository.findByUserName(userDto.userName())).thenReturn(Optional.empty());
         Role userRole = new Role();
-        userRole.setName(Role.Values.BASIC.name());
-
-        when(userRepository.findByUserName(userDto.username())).thenReturn(Optional.empty());
         when(roleRepository.findByName(Role.Values.BASIC.name())).thenReturn(userRole);
         when(bCryptPasswordEncoder.encode(userDto.password())).thenReturn("encodedPassword");
 
@@ -77,14 +75,16 @@ class UserControllerTest {
         assertEquals(HttpStatus.OK, response.getStatusCode());
         verify(userRepository, times(1)).save(any(User.class));
     }
-
     @Test
-    @DisplayName("Test listUsers returns list of users")
-    void listUsers() {
+    @DisplayName("Test listUsers when there are users")
+    void listUsers_ShouldReturnListOfUsers() {
         // Given
-        User user = new User();
-        user.setUserName("user1");
-        when(userRepository.findAll()).thenReturn(List.of(user));
+        User user1 = new User();
+        user1.setUserName("user1");
+        User user2 = new User();
+        user2.setUserName("user2");
+        List<User> users = List.of(user1, user2);
+        when(userRepository.findAll()).thenReturn(users);
 
         // When
         ResponseEntity<List<User>> response = userController.listUsers();
@@ -92,7 +92,8 @@ class UserControllerTest {
         // Then
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertNotNull(response.getBody());
-        assertEquals(1, response.getBody().size());
+        assertEquals(2, response.getBody().size());
         assertEquals("user1", response.getBody().get(0).getUserName());
+        assertEquals("user2", response.getBody().get(1).getUserName());
     }
 }
