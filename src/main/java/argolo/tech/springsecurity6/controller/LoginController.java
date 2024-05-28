@@ -36,8 +36,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest loginRequest){
-        var user = (userRepository.findByUserName(loginRequest.username())).isPresent()? userRepository.findByUserName(loginRequest.username()):
-                userRepository.findUserByEmail(loginRequest.username())  ;
+        var user = (userRepository.findByUserName(loginRequest.username())).isPresent()?
+                userRepository.findByUserName(loginRequest.username()) :
+                userRepository.findUserByCpf(loginRequest.username());
         if(user.isEmpty() || !user.get().isLoginCorrect(loginRequest, bCryptPasswordEncoder)){
             throw new BadCredentialsException("user or password invalid");
         }

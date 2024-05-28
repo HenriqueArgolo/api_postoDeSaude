@@ -13,23 +13,21 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "appointment_id")
     private Long id;
+
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-    private String type;
+
+    private String procedures;
+
     private String healthCenter;
+
     private String appointmentDate;
 
     @CreationTimestamp
     private Instant creationTimesTamp;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    private String status;
 
     public User getUser() {
         return user;
@@ -39,16 +37,12 @@ public class Appointment {
         this.user = user;
     }
 
-    public String getType() {
-        return type;
+    public String getProcedures() {
+        return procedures;
     }
 
-    public void setType(String content) {
-        this.type = content;
-    }
-
-    public Instant getCreationTimesTamp() {
-        return creationTimesTamp;
+    public void setProcedures(String procedures) {
+        this.procedures = procedures;
     }
 
     public String getHealthCenter() {
@@ -67,7 +61,22 @@ public class Appointment {
         this.appointmentDate = appointmentDate;
     }
 
+    public Instant getCreationTimesTamp() {
+        return creationTimesTamp;
+    }
+
     public void setCreationTimesTamp(Instant creationTimesTamp) {
         this.creationTimesTamp = creationTimesTamp;
     }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
+
+
+
