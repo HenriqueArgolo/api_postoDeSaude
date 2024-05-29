@@ -14,7 +14,7 @@ public class Appointment {
     @Column(name = "appointment_id")
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private User user;
 
     private String procedures;

@@ -11,8 +11,14 @@ public class History {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToMany
-    @JoinColumn
-    private List<Appointment> appointments;
+    @OneToOne
+    private Appointment appointments;
 
+    public Appointment getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(Appointment appointments) {
+        this.appointments = appointments;
+    }
 }
