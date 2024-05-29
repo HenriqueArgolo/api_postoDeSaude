@@ -1,4 +1,5 @@
 package argolo.tech.springsecurity6.controller;
+
 import argolo.tech.springsecurity6.controller.dto.AppointmentDto;
 import argolo.tech.springsecurity6.entities.Appointment;
 import argolo.tech.springsecurity6.repository.AppointmentRespository;
@@ -7,10 +8,7 @@ import argolo.tech.springsecurity6.repository.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.UUID;
@@ -51,4 +49,18 @@ public class AppointmentController {
         appointmentRespository.save(appointment);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/userappointment")
+    private ResponseEntity<Appointment> getUserAppointment(JwtAuthenticationToken token) {
+        var userOptional = userRepository.findById(UUID.fromString(token.getName()));
+        var user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        var AppointmentOpitional = appointmentRespository.findAppointmentByUser(user);
+        var appointment = AppointmentOpitional.orElseThrow(() -> new ResponseStatusException((HttpStatus.NOT_FOUND), "Appointment not found"));
+        if (!appointment.getStatus().equals("agendado")) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No pending appointment");
+        }
+        return ResponseEntity.ok(appointment);
+
+    }
+
 }

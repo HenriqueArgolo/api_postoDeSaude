@@ -4,6 +4,7 @@ import argolo.tech.springsecurity6.controller.dto.LoginRequest;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 
@@ -26,6 +27,8 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
+    @OneToMany
+    private List<Appointment> history;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -50,6 +53,7 @@ public class User {
     public void setUserName(String userName) {
         this.userName = userName;
     }
+
 
     public String getPassword() {
         return password;

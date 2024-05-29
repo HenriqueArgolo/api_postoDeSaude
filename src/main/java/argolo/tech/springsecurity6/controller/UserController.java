@@ -1,7 +1,9 @@
 package argolo.tech.springsecurity6.controller;
 import argolo.tech.springsecurity6.controller.dto.UserDto;
+import argolo.tech.springsecurity6.entities.Appointment;
 import argolo.tech.springsecurity6.entities.Role;
 import argolo.tech.springsecurity6.entities.User;
+import argolo.tech.springsecurity6.repository.AppointmentRespository;
 import argolo.tech.springsecurity6.repository.RoleRepository;
 import argolo.tech.springsecurity6.repository.UserRepository;
 import jakarta.transaction.Transactional;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -19,14 +22,20 @@ import java.util.UUID;
 
 @RestController
 public class UserController {
-    @Autowired
-    private  UserRepository userRepository;
-    @Autowired
-    private  RoleRepository roleRepository;
-    @Autowired
-    private  BCryptPasswordEncoder bCryptPasswordEncoder;
+        final
+      UserRepository userRepository;
+        final
+      RoleRepository roleRepository;
+        final
+      BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final AppointmentRespository appointmentRespository;
 
-
+    public UserController(UserRepository userRepository, RoleRepository roleRepository, BCryptPasswordEncoder bCryptPasswordEncoder, AppointmentRespository appointmentRespository) {
+        this.userRepository = userRepository;
+        this.roleRepository = roleRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.appointmentRespository = appointmentRespository;
+    }
 
 
     @Transactional

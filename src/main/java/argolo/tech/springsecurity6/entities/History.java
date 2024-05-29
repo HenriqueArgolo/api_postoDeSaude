@@ -12,7 +12,7 @@ public class History {
     private Long id;
 
     @OneToMany
-
+    @JoinColumn
     private List<Appointment> appointments;
 
 }
