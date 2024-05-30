@@ -99,6 +99,14 @@ public class User {
         return sus;
     }
 
+    public List<Appointment> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<Appointment> history) {
+        this.history = history;
+    }
+
     public void setSus(String sus) {
         this.sus = sus;
     }
