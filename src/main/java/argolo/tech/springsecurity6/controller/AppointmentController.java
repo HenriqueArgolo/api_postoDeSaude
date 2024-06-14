@@ -40,7 +40,7 @@ public class AppointmentController {
         var appointment = new Appointment();
         if (user.isPresent() && procedures.isPresent()) {
             appointment.setUser(user.get());
-            appointment.setProcedures(procedures.get().getName());
+            appointment.setProcedures(procedures.get());
             appointment.setAppointmentDate(appointmentDto.appointmentDate());
             appointment.setHealthCenter(appointmentDto.healthCenter().toLowerCase());
             appointment.setStatus(appointmentDto.status().toLowerCase());

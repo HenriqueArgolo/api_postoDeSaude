@@ -15,14 +15,15 @@ public class Appointment {
     private Long id;
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")
     private User user;
-
-    private String procedures;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "procedures_id")
+    private Procedures procedures;
 
     private String healthCenter;
 
     private String appointmentDate;
-
     @CreationTimestamp
     private Instant creationTimesTamp;
 
@@ -36,11 +37,11 @@ public class Appointment {
         this.user = user;
     }
 
-    public String getProcedures() {
+    public Procedures getProcedures() {
         return procedures;
     }
 
-    public void setProcedures(String procedures) {
+    public void setProcedures(Procedures procedures) {
         this.procedures = procedures;
     }
 

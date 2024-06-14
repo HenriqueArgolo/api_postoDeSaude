@@ -27,8 +27,6 @@ public class User {
     @Column(unique = true)
     private String email;
     private String password;
-    @OneToMany
-    private List<Appointment> history;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
@@ -97,14 +95,6 @@ public class User {
 
     public String getSus() {
         return sus;
-    }
-
-    public List<Appointment> getHistory() {
-        return history;
-    }
-
-    public void setHistory(List<Appointment> history) {
-        this.history = history;
     }
 
     public void setSus(String sus) {

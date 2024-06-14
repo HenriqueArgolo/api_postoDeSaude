@@ -44,7 +44,7 @@ public class LoginController {
         }
 
         var now = Instant.now();
-        var expiresIn = 300L;
+        var expiresIn = 30000L;
 
         var scopes = user.get().getRoles()
                 .stream()
@@ -61,7 +61,7 @@ public class LoginController {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        return ResponseEntity.ok(new LoginResponse(jwtValue, expiresIn, scopes));
+        return ResponseEntity.ok(new LoginResponse(user, jwtValue, expiresIn, scopes));
 
 
 
