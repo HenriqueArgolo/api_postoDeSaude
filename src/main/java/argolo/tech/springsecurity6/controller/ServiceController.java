@@ -35,7 +35,6 @@ public class ServiceController {
         var appointment = appointmentOptional.orElseThrow(() -> new ResponseStatusException((HttpStatus.NOT_FOUND), "Not Found"));
         if (appointment.getStatus().equals("agendado")) {
             appointment.setStatus("finalizado");
-            appointToHistory(appointment);
             appointmentRespository.delete(appointment);
         } else return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
@@ -43,16 +42,7 @@ public class ServiceController {
     }
 
 
-    private void appointToHistory(Appointment appointment){
-        var history = new History();
-        history.setUserId(appointment.getUser().getId().toString());
-        history.setProcedures(appointment.getProcedures().getName());
-        history.setStatus(appointment.getStatus());
-        history.setAppointmentDate(appointment.getAppointmentDate());
-        history.setCreationTimesTamp(appointment.getCreationTimesTamp());
-        history.setHealthCenter(appointment.getHealthCenter());
-        historyRepository.save(history);
-    }
+
 
 }
 

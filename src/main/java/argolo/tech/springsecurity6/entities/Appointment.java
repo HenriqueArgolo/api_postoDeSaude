@@ -14,7 +14,7 @@ public class Appointment {
     @Column(name = "appointment_id")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "user_id")
     private User user;
     @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
@@ -28,6 +28,8 @@ public class Appointment {
     private Instant creationTimesTamp;
 
     private String status;
+
+    private Integer position;
 
     public User getUser() {
         return user;
@@ -75,6 +77,18 @@ public class Appointment {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public Integer getPosition() {
+        return position;
+    }
+
+    public void setPosition(Integer position) {
+        this.position = position;
+    }
+
+    public Long getId() {
+        return id;
     }
 }
 

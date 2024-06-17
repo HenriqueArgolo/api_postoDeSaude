@@ -2,6 +2,7 @@ package argolo.tech.springsecurity6.controller;
 
 import argolo.tech.springsecurity6.controller.dto.AppointmentDto;
 import argolo.tech.springsecurity6.entities.Appointment;
+import argolo.tech.springsecurity6.entities.User;
 import argolo.tech.springsecurity6.repository.AppointmentRespository;
 import argolo.tech.springsecurity6.repository.ProceduresRepositiry;
 import argolo.tech.springsecurity6.repository.UserRepository;
@@ -35,12 +36,14 @@ public class AppointmentController {
 
     @PostMapping("/appointment")
     private ResponseEntity<Void> createAppointment(@RequestBody AppointmentDto appointmentDto, JwtAuthenticationToken token) {
-        var procedures = proceduresRepositiry.findByName(appointmentDto.procedures().name());
+        var proceduresOptional = proceduresRepositiry.findByName(appointmentDto.procedures().name());
+        var procedures = proceduresOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Procedure not found"));
         var user = userRepository.findById(UUID.fromString(token.getName()));
         var appointment = new Appointment();
-        if (user.isPresent() && procedures.isPresent()) {
+
+        if (user.isPresent()) {
             appointment.setUser(user.get());
-            appointment.setProcedures(procedures.get());
+            appointment.setProcedures(procedures);
             appointment.setAppointmentDate(appointmentDto.appointmentDate());
             appointment.setHealthCenter(appointmentDto.healthCenter().toLowerCase());
             appointment.setStatus(appointmentDto.status().toLowerCase());
@@ -49,6 +52,12 @@ public class AppointmentController {
         appointmentRespository.save(appointment);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/checkifscheduled")
+    public boolean isScheduled(@RequestBody User user) {
+        return appointmentRespository.existsByUser(user);
+    }
+
 
     @GetMapping("/userappointment")
     private ResponseEntity<Appointment> getUserAppointment(JwtAuthenticationToken token) {
@@ -59,8 +68,19 @@ public class AppointmentController {
         if (!appointment.getStatus().equals("agendado")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No pending appointment");
         }
+        appointment.setPosition(appointmentRespository.findPositionById(appointment.getId()));
         return ResponseEntity.ok(appointment);
+    }
 
+    @DeleteMapping("/deleteAppointment")
+    private ResponseEntity<Void> deleteAppointment(JwtAuthenticationToken token){
+        var userOptional = userRepository.findById(UUID.fromString(token.getName()));
+        userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        var appointmentOptional = appointmentRespository.findAppointmentByUser(userOptional.get());
+        var appointment = appointmentOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+        appointment.setProcedures(null);
+        appointmentRespository.delete(appointment);
+        return ResponseEntity.ok().build();
     }
 
 }
