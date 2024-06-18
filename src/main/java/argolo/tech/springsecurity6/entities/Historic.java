@@ -1,43 +1,34 @@
 package argolo.tech.springsecurity6.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
-import java.util.List;
 
 @Entity
 @Table(name = "tb_history")
-public class History{
+public class Historic {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private String userId;
-    private String procedures;
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "procedures_id")
+    private Procedures procedures;
 
     private String healthCenter;
 
     private String appointmentDate;
 
+    @CreationTimestamp
     private Instant creationTimesTamp;
 
     private String status;
 
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getProcedures() {
-        return procedures;
-    }
-
-    public void setProcedures(String procedures) {
-        this.procedures = procedures;
-    }
+    private String observation;
 
     public String getHealthCenter() {
         return healthCenter;
@@ -77,5 +68,29 @@ public class History{
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Procedures getProcedures() {
+        return procedures;
+    }
+
+    public void setProcedures(Procedures procedures) {
+        this.procedures = procedures;
+    }
+
+    public String getObservation() {
+        return observation;
+    }
+
+    public void setObservation(String observation) {
+        this.observation = observation;
     }
 }

@@ -24,6 +24,7 @@ public class Appointment {
     private String healthCenter;
 
     private String appointmentDate;
+
     @CreationTimestamp
     private Instant creationTimesTamp;
 

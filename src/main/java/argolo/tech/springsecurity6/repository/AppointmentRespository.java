@@ -20,12 +20,16 @@ public interface AppointmentRespository extends JpaRepository<Appointment, Long>
 
     @Query("SELECT COUNT(a) FROM Appointment a WHERE a.id <= :appointmentId")
     Integer findPositionById(@Param("appointmentId") Long appointmentId);
+    @Transactional
+    @Modifying
+    @Query(value = "INSERT INTO tb_history (id, appointment_date, creation_times_tamp, health_center, procedures_id, status, user_id)  " +
+            "SELECT appointment_id, appointment_date, creation_times_tamp, health_center, procedures_id, status, user_id " +
+            "FROM tb_appointment WHERE appointment_id = :id", nativeQuery = true)
+    void moveToHistory(@Param("id") Long id);
 
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO tb_history (id, appointment_date, creation_times_tamp, health_center, procedures, status, user_id)  " +
-            "SELECT appointment_id, appointment_date, creation_times_tamp, health_center, procedures, status, user_id " +
-            "FROM tb_appointment WHERE appointment_id = :id", nativeQuery = true)
-    void moveToHistory(Long id);
+    @Query("DELETE FROM Appointment a WHERE a.id = :id ")
+    void deleteById(@Param("id") Long id);
 }
