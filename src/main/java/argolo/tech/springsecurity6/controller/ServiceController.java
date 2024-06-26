@@ -35,6 +35,7 @@ public class ServiceController {
       if (appointment.isEmpty()) {
           throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointmet no found");
       }
+
         creatHistory(observationDto, appointment);
         return ResponseEntity.ok().build();
     }

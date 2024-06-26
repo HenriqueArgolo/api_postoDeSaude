@@ -43,7 +43,7 @@ public class AppointmentController {
         var proceduresOptional = proceduresRepositiry.findByName(appointmentDto.procedures().name());
         var procedures = proceduresOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
         var user = userRepository.findById(UUID.fromString(token.getName()));
-        var num = appointmentRespository.count();
+        var num = appointmentRespository.countByAppointmentDate(appointmentDto.appointmentDate());
         var appointment = new Appointment();
         if (user.isPresent() && num <= 40) {
             appointment.setUser(user.get());

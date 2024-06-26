@@ -35,4 +35,6 @@ public interface AppointmentRespository extends JpaRepository<Appointment, Long>
     void deleteById(@Param("id") Long id);
 
     Optional<List<Appointment>> findAppointmentByAppointmentDate(String data);
+
+    Integer countByAppointmentDate(String data);
 }
