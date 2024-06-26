@@ -61,10 +61,7 @@ public class AppointmentController {
 
     @GetMapping("/userappointment")
     private ResponseEntity<Appointment> getUserAppointment(JwtAuthenticationToken token) {
-        var userOptional = userRepository.findById(UUID.fromString(token.getName()));
-        var user = userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        var AppointmentOpitional = appointmentRespository.findAppointmentByUser(user);
-        var appointment = AppointmentOpitional.orElseThrow(() -> new ResponseStatusException((HttpStatus.NOT_FOUND), "Appointment not found"));
+        var appointment = getAppointmentByUserToken(token);
         if (!appointment.getStatus().equals("agendado")) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No pending appointment");
         }
@@ -74,13 +71,16 @@ public class AppointmentController {
 
     @DeleteMapping("/deleteAppointment")
     private ResponseEntity<Void> deleteAppointment(JwtAuthenticationToken token){
-        var userOptional = userRepository.findById(UUID.fromString(token.getName()));
-        userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
-        var appointmentOptional = appointmentRespository.findAppointmentByUser(userOptional.get());
-        var appointment = appointmentOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+        var appointment = getAppointmentByUserToken(token);
         appointment.setProcedures(null);
         appointmentRespository.delete(appointment);
         return ResponseEntity.ok().build();
     }
 
+    private Appointment getAppointmentByUserToken(JwtAuthenticationToken token){
+        var userOptional = userRepository.findById(UUID.fromString(token.getName()));
+        userOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+        var appointmentOptional = appointmentRespository.findAppointmentByUser(userOptional.get());
+        return appointmentOptional.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Appointment not found"));
+    }
 }
