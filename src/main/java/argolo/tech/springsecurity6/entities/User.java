@@ -3,8 +3,6 @@ package argolo.tech.springsecurity6.entities;
 import argolo.tech.springsecurity6.controller.dto.LoginRequest;
 import jakarta.persistence.*;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 

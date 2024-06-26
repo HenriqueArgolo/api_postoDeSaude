@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -32,4 +33,6 @@ public interface AppointmentRespository extends JpaRepository<Appointment, Long>
     @Modifying
     @Query("DELETE FROM Appointment a WHERE a.id = :id ")
     void deleteById(@Param("id") Long id);
+
+    Optional<List<Appointment>> findAppointmentByAppointmentDate(String data);
 }

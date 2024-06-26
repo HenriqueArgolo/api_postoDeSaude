@@ -1,5 +1,4 @@
 package argolo.tech.springsecurity6.entities;
-
 import jakarta.persistence.*;
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -13,6 +12,7 @@ public class Appointment {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "appointment_id")
     private Long id;
+
 
     @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE, CascadeType.PERSIST})
     @JoinColumn(name = "user_id")
